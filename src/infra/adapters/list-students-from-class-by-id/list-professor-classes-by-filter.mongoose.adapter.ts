@@ -13,12 +13,11 @@ export class ListStudentsFromClassByIdMongooseAdapter implements ListStudentsFro
     const students = (await this.StudentModel.find<StudentDocument>({ classCodeList: { $in: [classId] } })
       .lean()
       .exec()) as StudentDocument[];
-
     return this.mapStudentsToModel(students);
   }
 
   private mapStudentsToModel(studentDocumentList: StudentDocument[]): ListStudentsFromClassByIdPortResult {
     console.log('studentDocumentList', studentDocumentList);
-    return [];
+    return studentDocumentList;
   }
 }

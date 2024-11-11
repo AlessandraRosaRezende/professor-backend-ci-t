@@ -5,10 +5,10 @@ export class CheckClassStatusUsecase {
   constructor(private readonly listStudentsFromClassByIdPort: ListStudentsFromClassByIdPort) {}
 
   async execute({ classId }: CheckClassStatusInput): Promise<string> {
-    await this.listStudentsFromClassByIdPort.execute({
+    const teste = await this.listStudentsFromClassByIdPort.execute({
       classId,
     });
-
+    console.log(teste);
     return '';
   }
 }

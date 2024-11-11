@@ -9,24 +9,22 @@ import { StudentDocument } from '../../../infra/schemas/student.shema';
 export class UpdateStudentStatusMongooseAdapter implements UpdateStudentStatusPort {
   constructor(private readonly StudentModel: Model<StudentDocument>) {}
 
-  async execute({ studentId, newStatus }: UpdateStudentStatusPortInput): Promise<UpdateStudentStatusPortResult> {
-    const updatedStudent = (await this.StudentModel.findByIdAndUpdate(studentId, { status: newStatus }, { new: true })
-      .lean()
-      .exec()) as StudentDocument | null;
+  async execute({ studentId, status }: UpdateStudentStatusPortInput): Promise<UpdateStudentStatusPortResult> {
+    // Atualiza o status do aluno no banco de dados
+    const updatedStudent = await this.StudentModel.findOneAndUpdate(
+      { id: studentId },
+      { status },
+      { new: true },
+    ).exec();
 
     if (!updatedStudent) {
       throw new Error('Student not found');
     }
 
-    return this.mapStudentToModel(updatedStudent);
-  }
-
-  private mapStudentToModel(student: StudentDocument): UpdateStudentStatusPortResult {
     return {
-      id: student.id,
-      name: student.name,
-      status: student.status,
-      classCodeList: student.classCodeList.map((classId) => classId.toString()),
+      id: updatedStudent.id,
+      name: updatedStudent.name,
+      status: updatedStudent.status,
     };
   }
 }

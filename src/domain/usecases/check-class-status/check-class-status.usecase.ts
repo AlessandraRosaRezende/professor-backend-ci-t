@@ -7,12 +7,14 @@ export class CheckClassStatusUsecase {
   async execute({ classId }: CheckClassStatusInput): Promise<string> {
     const students = await this.listStudentsFromClassByIdPort.execute({ classId });
 
-    const totalStudents = students.length;
-    const evaluatedStudents = students.filter((student) => student.status !== 'NAO_AVALIADO').length;
+    const statuses = students.map((student) => student.status || 'NAO_AVALIADO');
 
-    if (evaluatedStudents === 0) {
+    const allNotEvaluated = statuses.every((status) => status === 'NAO_AVALIADO');
+    const someNotEvaluated = statuses.some((status) => status === 'NAO_AVALIADO');
+
+    if (allNotEvaluated) {
       return 'ABERTA';
-    } else if (evaluatedStudents < totalStudents) {
+    } else if (someNotEvaluated) {
       return 'EM_FECHAMENTO';
     } else {
       return 'FECHADA';

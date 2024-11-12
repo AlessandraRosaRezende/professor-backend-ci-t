@@ -18,34 +18,26 @@ const createFastifyAdapter = () => {
     },
   });
 
-  adapter.getInstance().addHook('onRequest', (req, res, done) => {
-    const traceId = req.id;
-
-    req.headers['x-trace-id'] = traceId;
-    res.header('x-trace-id', traceId);
-
-    done();
-  });
-
-  adapter.getInstance().setChildLoggerFactory((logger, bindings) => {
-    bindings.name = 'FastifyAdapter';
-    return logger.child(bindings);
+  // Registrar o CORS antes de criar a aplicação Nest
+  adapter.getInstance().register(cors, {
+    origin: '*',
+    methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-trace-id'],
+    preflight: true,
   });
 
   return adapter;
 };
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+  const adapter = createFastifyAdapter();
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter); // Passar o adapter configurado aqui
+
   const configService = app.get(ConfigService);
   const seedService = app.get(SeedService);
 
+  // Inicia o seed
   await seedService.seed();
-
-  const adapter = createFastifyAdapter();
-  const fastify = adapter.getInstance();
-
-  fastify.register(cors, {});
 
   await app.listen(configService.get<string>('PORT', '8080'), '0.0.0.0');
 }

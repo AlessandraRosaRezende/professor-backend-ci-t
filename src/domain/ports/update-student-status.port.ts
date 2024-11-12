@@ -1,11 +1,18 @@
-import { Action } from '../../types/action.type';
-import { Student } from '../models/student.model';
-
 export interface UpdateStudentStatusPortInput {
   studentId: string;
-  newStatus: string;
+  aulasLecionadas: number;
+  aulasAtendidas: number;
+  notaP1: number;
+  notaP2: number;
+  status?: string; // O status será calculado no usecase e passado aqui
 }
 
-export type UpdateStudentStatusPortResult = Student;
+export interface UpdateStudentStatusPortResult {
+  id: string;
+  name: string;
+  status: string;
+}
 
-export type UpdateStudentStatusPort = Action<UpdateStudentStatusPortInput, Promise<UpdateStudentStatusPortResult>>;
+export interface UpdateStudentStatusPort {
+  execute(input: UpdateStudentStatusPortInput): Promise<UpdateStudentStatusPortResult>;
+}

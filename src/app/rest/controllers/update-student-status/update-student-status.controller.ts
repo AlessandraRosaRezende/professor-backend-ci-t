@@ -16,7 +16,6 @@ export class UpdateStudentStatusController {
   ): Promise<UpdateStudentStatusResponseBody> {
     const usecase = this.usecaseFactory.getInstance();
 
-    // Agora passamos corretamente o 'newStatus' ao invocar o usecase
     const updatedStudent = await usecase.execute({
       studentId,
       aulasLecionadas: body.aulas_lecionadas,

@@ -4,7 +4,7 @@ export interface UpdateStudentStatusPortInput {
   aulasAtendidas: number;
   notaP1: number;
   notaP2: number;
-  status?: string; // O status será calculado no usecase e passado aqui
+  status?: string;
 }
 
 export interface UpdateStudentStatusPortResult {

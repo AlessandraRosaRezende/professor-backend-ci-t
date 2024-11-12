@@ -1,4 +1,3 @@
-// seed.module.ts
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Class, ClassSchema } from './schemas/class.schema';

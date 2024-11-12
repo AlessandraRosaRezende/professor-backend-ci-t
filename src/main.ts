@@ -18,7 +18,6 @@ const createFastifyAdapter = () => {
     },
   });
 
-  // Registrar o CORS antes de criar a aplicação Nest
   adapter.getInstance().register(cors, {
     origin: '*',
     methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
@@ -31,12 +30,11 @@ const createFastifyAdapter = () => {
 
 async function bootstrap() {
   const adapter = createFastifyAdapter();
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter); // Passar o adapter configurado aqui
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter);
 
   const configService = app.get(ConfigService);
   const seedService = app.get(SeedService);
 
-  // Inicia o seed
   await seedService.seed();
 
   await app.listen(configService.get<string>('PORT', '8080'), '0.0.0.0');

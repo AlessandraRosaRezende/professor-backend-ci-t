@@ -10,7 +10,6 @@ export class UpdateStudentStatusMongooseAdapter implements UpdateStudentStatusPo
   constructor(private readonly StudentModel: Model<StudentDocument>) {}
 
   async execute({ studentId, status }: UpdateStudentStatusPortInput): Promise<UpdateStudentStatusPortResult> {
-    // Atualiza o status do aluno no banco de dados
     const updatedStudent = await this.StudentModel.findOneAndUpdate(
       { id: studentId },
       { status },
